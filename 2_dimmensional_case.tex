@@ -12,6 +12,7 @@
 
 \newtheorem{lemma}{Лемма}
 \newtheorem{statement}{Утверждение}
+\newtheorem{remark}{Замечание}
 
 \title{Intrinsic volumes algorithm with  strategic buyer in 2 dimensional case}
 
@@ -35,12 +36,25 @@
 \end{enumerate}
 
 Выберем в качестве концов корзин (последовательное разбиение прямой отрезками) $l_k = a^{-k}$, где в дальнейшем получим условия на пармаетр.
-
+\\
+\\
 \textbf{Условия на параметр} $a$:
 \begin{enumerate}
-    \item $a > 1$,
+    \item $a > 1,$
+    \item $a^2 \leq \frac{1 - \gamma}{\pi (2 \gamma^r)},$
+    \item $a^2 \leq \frac{1 - \gamma}{8 \pi (2 \gamma^r)},$
+    \item $a^2 \leq \frac{1 - \gamma}{2 \gamma^r}.$
 \end{enumerate}
-
+\textbf{Выбор параметра сдвига} $\eta_t$:
+\\
+Выберем $\eta_t = \frac{\gamma^r}{1 - \gamma} diam(S_t).$
+\\
+\textbf{Условия, при которых работает алгоритм}:
+\begin{enumerate}
+    \item $1 < \frac{1 - \gamma}{\pi (2 \gamma^r)},$
+    \item $1 < \frac{1 - \gamma}{8 \pi (2 \gamma^r)},$
+    \item $1 < \frac{1 - \gamma}{2 \gamma^r}.$
+\end{enumerate}
 \section{Вспомогательные утверждения}
 \lemma
 Пусть в момент $t$ покупатель отказывается от приобретения, тогда в случае последующих $r$ пенализационных раундов будет выполнено следующее неравнство:
@@ -48,9 +62,7 @@ $$\hat{\theta}^T u_t \leq p_t + \frac{\gamma^r}{1 - \gamma} diam(S_t).$$
 \begin{proof}
 Пусть $S(\sigma_t)$ - прибыль покупателя при стратегии $\sigma.$
 Рассмотрим 2 стратегии покупателя. При стратегии $\sigma^{'}_t$ - покупатель соглашется на покупку на раунде $t,$ а при стратегии $\sigma^{opt}_t$ - действует оптимальным образом (т.е. на раунде $t$ следует отказ).
-
 Тогда выполнено следующее неравенство: $S(\sigma^{'}_t) \leq S(\sigma^{opt}_t).$
-
 Подставим в это неравенство оценки для прибылей:
 \begin{enumerate}
     \item $S(\sigma^{'}_t) = \gamma^{t - 1}(\hat{\theta}^T u_t - p_t),$
@@ -83,11 +95,128 @@ $h_{max} = $ максимальная длина сегмента $S_t \cap \{x:
 \If{$\omega < 1 / T$}{
     $p_t = \underline{p}_t$\;
 }\ElseIf{$bkt(A^{'}_t) = bkt(P_t) = k$}{
-    выбираем цену $p_t: Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{q - \gamma}diam(S_t))) = l^2_{k + 1} / (4 \pi)$\:
+    выбираем цену $p_t: Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t))) = l^2_{k + 1} / (4 \pi)$\;
 }\ElseIf{$bkt(A^{'}_t) = r > bkt(P_t) = k, \omega < h_{max}$}{
-    выбираем $p_t: Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{q - \gamma}diam(S_t))) = l^2_{k + 1} / (4 \pi)$\;
+    выбираем цену $p_t: Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t))) = l^2_{k + 1} / (4 \pi)$\;
 }\ElseIf{$bkt(A^{'}_t) = r > bkt(P_t) = k, \omega \geq h_{max}$}{
-    выбираем $p_t: Perim(S_t) - Perim(S^{+}_t(p = p_t = \eta_t + \frac{\gamma^r}{q - \gamma}diam(S_t)) = l_{k + 1} / 2$\;
+    выбираем цену $p_t: Perim(S_t) - Perim(S^{+}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t)) = l_{k + 1} / 2$\; 
+}
+предлагаем покупателю $p_t + \eta_t$\;
+\If{в случае согласия покупателя}{
+    $S_{t + 1} = S^{+}_{t}(p = p_t + \eta_t - \frac{\gamma}{1 - \gamma})$\;
+}{
+    $S_{t + 1} = S^{-}_{t}(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma})$\;
 }
 \end{algorithm}
+
+\section{Осуществимость алгоритма}
+\subsection{Случай $bkt(A^{'}_t) = bkt(P_t) = k$}
+\statement
+В случае выполнения условия $bkt(A^{'}_t) = bkt(P_t) = k$ цена, указанная в алгоритме существует, т.е. выполнены условия:
+\begin{enumerate}
+    \item $Area(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t)]) \leq l^2_{k + 1} / (4 \pi),$
+    \item $\underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t) \leq \overline{p}_t.$
+\end{enumerate}
+\begin{proof}
+1. Выполнена следующая оценка: $diam(S_t) \leq P_t / 2 \leq l_k / 2.$ Тогда, погружая $S_t$  прямоугольник со сторонами $\frac{\gamma^r + \gamma}{1 - \gamma}diam(S_t)$ и $diam(S_t)$, получаем:
+\begin{gather*}
+Area(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t) = \underline{p}_t + \frac{\gamma^r + \gamma}{1 - \gamma}diam(S_t)]) \leq \\ \leq  (\frac{\gamma^r + \gamma}{1 - \gamma}diam(S_t)) diam(S_t) \leq l^2_k / 4 \frac{\gamma^r + \gamma}{1 - \gamma}.  
+\end{gather*}
+Таким образом для выполнения неравенства 1. досточно выполнения:
+$l^2_k / 4 \frac{\gamma^r + \gamma}{1 - \gamma} \leq l^2_{k + 1} / (4 \pi).$ Подставляя в качестве $l_k = c a^{-k}$, получим $\pi a^2 \leq \frac{1 - \gamma}{\gamma + \gamma^r}.$ C учетом условия $a > 1$ получим следующее неравенство $\pi \leq \frac{1 - \gamma}{\gamma + \gamma^r}.$
+\\
+2. Знаем, что 
+$$diam(S_t)(\overline{p}_t - \underline{p}_t) \geq Area(S_t) \geq l^2_{k + 1} / (4 \pi).$$ 
+Отсюда следует, что $\overline{p}_t - \underline{p}_t \geq \frac{l^2_{k + 1}}{4 \pi diam(S_t)}.$
+Для выполнения неравенства 2. достаточно показать:
+$$diam(S_t) \leq \frac{1 - \gamma}{\gamma + \gamma^r}(\overline{p}_t - \underline{p}_t).$$
+При этом мы знаем, что $diam(S_t) \leq l_k / 2,$ а $\overline{p}_t - \underline{p}_t \geq \frac{l^2_{k + 1}}{4 \pi diam(S_t)}$.
+
+Тогда для выполнения 2. достаточно выполнения:
+$$l^2_k / 4 \leq \frac{1 - \gamma}{\gamma + \gamma^r}l^{2}_{k + 1} / (4 \pi),$$
+а это выполнено в силу выбра параметра $a$.
+\end{proof}
+
+\remark
+На самом деле 2. следует из 1., т.к. уже из первого пункта мы знаем, что при отсечении части $S_t$ высотой $h = \eta_t + \frac{\gamma^r}{1 - \gamma} diam(S_t)$ мы получим кусок площади $l^2_{k + 1}$. Если бы $h$ было бы равно $\overline{p}_t - \underline{p}_t,$ мы бы получили кусок площади большей площади, т.к. $bkt(A^{'}_t) = bkt(P_t) = k.$
+
+\subsection{Случай $bkt(A^{'}_t) = r > bkt(P_t) = k, \omega < h_{max}$}
+\statement
+В случае выполнения условия $bkt(A^{'}_t) = r > bkt(P_t) = k, \omega < h_{max}$ цена, указанная в алгоритме существует, т.е. выполнены условия:
+\begin{enumerate}
+    \item $Area(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t)]) \leq l^2_{r + 1} / (4 \pi),$
+    \item $\underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t) \leq \overline{p}_t.$
+\end{enumerate}
+\begin{proof}
+1. Заметим, что выполнена следующая оценка $diam(S_t) \leq \sqrt(2) l_r,$ т.к. можем погрузить $S_t$ в квадрат со стороной $diam(S_t).$
+Тогда $Area(S_t) \leq diam(S_t)^2.$
+Выполнены следующие неравенства:
+\begin{multline*}
+    Area(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t) = \underline{p}_t + \frac{\gamma^r + \gamma}{1 - \gamma}diam(S_t)]) \leq \frac{\gamma^r + \gamma}{1 - \gamma}diam(S_t)^2 \leq \frac{\gamma^r + \gamma}{1 - \gamma} 2 l^2_r.
+\end{multline*}
+Тогда для выполнения неравенства из пункта 1. достаточно выполнения неравенства 
+\begin{gather*}
+    \frac{\gamma^r + \gamma}{1 - \gamma} 2 l^2_r \leq \frac{l^2_{r + 1}}{4 \pi},\\
+    a^2 \leq \frac{1 - \gamma}{(\gamma + \gamma^r)(8 \pi)}.
+\end{gather*}
+Вспоминая условие $a > 1$, получим следующее неравенство:
+$$8 \pi < \frac{1 - \gamma}{\gamma^r + \gamma}.$$
+
+2. Условие 2. выполенно по тем же соображениям, что и в пункте 1.
+\end{proof}
+
+\subsection{Случай $bkt(A^{'}_t) = r > bkt(P_t) = k, \omega \geq h_{max}$}
+\statement
+В случае выполнения условия $bkt(A^{'}_t) = r > bkt(P_t) = k, \omega \geq h_{max}$ цена, указанная в алгоритме существует, т.е. выполнены условия:
+\begin{enumerate}
+    \item $P(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t)]) \leq l_{k + 1},$
+    \item $\underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t) \leq \overline{p}_t.$
+\end{enumerate}
+\begin{proof}
+1. Заметим, что $P(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}]) \leq 2 diam(S_t) \frac{\gamma^r}{1 - \gamma} + 2 h_{max},$ т.к. мы можем погрузить $S^{-}_t$ в прямоугольник со сторонами $(h_{max}, diam(S_t) \frac{\gamma^r}{1 - \gamma}).$
+
+Также из неравенств $$h^2_{max} / 2 \leq (\overline{p}_t - \underline{p}_t) h_{max} / 2 \leq Area(S_t) \leq \frac{l^2_r}{4 \pi}$$ следует, что $h_{max} \leq l_r / (2 \pi) \leq l_{k + 1} / (2 \pi).$
+
+Тогда $P(S^{-}_t[p = \underline{p}_t + \eta_t + \frac{\gamma^r}{1 - \gamma}]) \leq 2 l_k / 2 \frac{\gamma^r}{1 - \gamma} + l_{k + 1} / \sqrt{\pi},$ т.к. $diam(S_t) \leq l_k / 2.$ Подставляя в качестве $l_k = a^{-k},$ получаем, что для выполнения требуемого неравенства необходимо выполнение условия:
+$$a \frac{\gamma^r + \gamma}{1 - \gamma} \leq 1.$$
+
+C учетом неравенства $a > 1,$ получаем условие $1 < \frac{1 - \gamma}{\gamma^r + \gamma}.$
+
+2. Пользуемся теми же соображениями.
+\end{proof}
+
+\section{Оценка Regret}
+\statement
+При условиях на параметр $a,$ указанных выше, при значении $r,$ соотвествующем корректной работе алгоитма, будет выполнено следующее неравенство $Regret = O(\log{T}).$
+\begin{proof}
+1. Рассмотрим раунд типа $\overline{p}_t - \underline{p}_t < 1 / T.$ Суммарная ошибка во всех таких раундах $Regret_1 \leq T (\overline{p}_t - \underline{p}_t) \leq \frac{T}{T} = O(1).$
+
+2. Рассмотрим раунд типа $bkt(A^{'}_t) = bkt(P_t) = k,$ где $k$ - фиксировано. Количество таких раундов $\leq \log{T},$ т.к. $\overline{p}_t - \underline{p}_t \leq l_k = a^{-k} > 1 / T,$ иначе мы перейдем к случаю 1. Теперь оценим потери покупателя на каждом из таких раундов.
+
+В случае отказа, в силу ввыбора цены в алгоритме, мы переходим к случаю $bkt(P_{t + 1}) = k + 1,$ а потери оцениваются $r O(1) = O(1).$ При этом в силу леммы будет выполнено $$\hat{\theta}^T u_t \leq p_t + \eta_t \frac{\gamma^r}{1 - \gamma} diam(S_t),$$ т.е. мы перешли в область содержащее значение $\hat{\theta}.$
+
+В случае согласия покупателя ошибка оценивается величиной $\overline{p}_t - \underline{p}_t \leq l_k / 2.$ При этом в силу леммы будет выполнено $$\hat{\theta}^T u_t \geq p_t + \eta_t - \frac{\gamma}{1 - \gamma} diam(S^{+}_t),$$ т.е. мы перейдем в область $S_{t + 1},$ содержащее истинное знчение параметра $\hat{\theta}.$
+
+Теперь оценим величину $Area(S_t) - Area(S_{t + 1}):$
+\begin{gather*}
+    Area(S_t) - Area(S_{t + 1}) = Area(S_t) - Area(S^{+}_t(p = p_t + \eta_t - \frac{\gamma}{1 - \gamma}diam(S_t))) \geq \\
+    \geq Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t))) - \\
+    - Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t)) \setminus S^{-}_t(p = p_t + \eta_t - \frac{\gamma}{1 - \gamma}diam(S_t))) \geq \\
+    \geq Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t))) - \frac{\gamma^r + \gamma}{1 - \gamma} diam(S_t) h_{max} \geq \\
+    \geq \frac{l^2_{k + 1}}{4 \pi} - \frac{\gamma + \gamma^r}{1 - \gamma} \frac{l^2_k}{4},
+\end{gather*}
+т.к.
+$diam(S_t) \leq l_k / 2, h_{max} \leq diam(S_t),$ а $Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{1 - \gamma}diam(S_t)) \setminus S^{-}_t(p = p_t + \eta_t - \frac{\gamma}{1 - \gamma}diam(S_t))),$ мы оценили площадью прямоугольника со сторонами $(h_{max}, \frac{\gamma^r + \gamma}{1 - \gamma}diam(S_t)).$
+
+Тогда количество шагов, необходимых для того, чтобы покинуть случай $bkt(A^{'}_t) = k$ оценивается сверху
+\begin{gather*}
+    \frac{l^2_k / (4 \pi) - l^2_{k + 1} / (4 \pi)}{l^2_{k + 1} - \frac{(\gamma^r + \gamma) l^2_k}{(1 - \gamma) 4}} \leq \frac{1}{4 \pi} \frac{1 - a^{-2}}{a^{-2} - \pi \frac{\gamma^r + \gamma}{1 - \gamma}} = O(1).
+\end{gather*}
+В таком случае потери при согласии покупателя в случае $bkt(A^{'}_t) = k$  оцениваются сверху величиной $(\overline{p}_t - \underline{p}_t) O(1) \leq l_k / 2 O(1) = O(1).$
+
+Таким образом суммарная потеря по всем раундам $bkt(A^{'}_t) = bkt(P_t) = k$ оценивается $Regret_2 \leq \log{T} O(1) = O(\log{T}).$
+
+3. Рассмотрим раунд типа $bkt(A^{'}_t) = bkt(P_t) = k,$
+\end{proof}
 \end{document}
+
