@@ -1,0 +1,93 @@
+\documentclass[12 pt, russian]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1cm,bmargin=1cm,lmargin=2cm,rmargin=2cm}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{amsthm}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e} 
+
+\newtheorem{lemma}{Лемма}
+\newtheorem{statement}{Утверждение}
+
+\title{Intrinsic volumes algorithm with  strategic buyer in 2 dimensional case}
+
+\begin{document}
+
+\maketitle
+
+\section{Обозначения}
+\textbf{Введем следующие обозначения}:
+\begin{enumerate}
+    \item $\hat{\theta}$ - искомое значение параметра,
+    \item $S_t$ - область возможных значений искомого параметра $\hat{\theta}$ на $t$-м шаге алгоритма,
+    \item $S^{+}_t$ - область, получаемая алгоритмом в случае покупки,
+    \item $S^{-}_t$ - область, получаемая алгоритмом в случае отказа,
+    \item $u_t$ - вектор параметров товара,
+    \item $p_t$ - цена за товар, предложенная на на $t$ - м шаге алгоритма,
+    \item $\eta_t$ - сдвиг цены,
+    \item $\underline{p}_t = min(\{\theta^T u_t: \theta \in S_t\})$,
+    \item $\underline{p}_t = max(\{\theta^T u_t: \theta \in S_t\})$,
+    \item $A^{'}_t, A_t, P_t$ - соответсвенно нормаированная ($S^{'} = 2\sqrt{\pi S})$ и обычная площади, периметр.
+\end{enumerate}
+
+Выберем в качестве концов корзин (последовательное разбиение прямой отрезками) $l_k = a^{-k}$, где в дальнейшем получим условия на пармаетр.
+
+\textbf{Условия на параметр} $a$:
+\begin{enumerate}
+    \item $a > 1$,
+\end{enumerate}
+
+\section{Вспомогательные утверждения}
+\lemma
+Пусть в момент $t$ покупатель отказывается от приобретения, тогда в случае последующих $r$ пенализационных раундов будет выполнено следующее неравнство:
+$$\hat{\theta}^T u_t \leq p_t + \frac{\gamma^r}{1 - \gamma} diam(S_t).$$
+\begin{proof}
+Пусть $S(\sigma_t)$ - прибыль покупателя при стратегии $\sigma.$
+Рассмотрим 2 стратегии покупателя. При стратегии $\sigma^{'}_t$ - покупатель соглашется на покупку на раунде $t,$ а при стратегии $\sigma^{opt}_t$ - действует оптимальным образом (т.е. на раунде $t$ следует отказ).
+
+Тогда выполнено следующее неравенство: $S(\sigma^{'}_t) \leq S(\sigma^{opt}_t).$
+
+Подставим в это неравенство оценки для прибылей:
+\begin{enumerate}
+    \item $S(\sigma^{'}_t) = \gamma^{t - 1}(\hat{\theta}^T u_t - p_t),$
+    \item $S(\sigma^{opt}_t) \leq \sum\limits_{s = t + r}^T \gamma^{s - 1}(\hat{\theta}^T u_t - \underline{p}_t) \leq \sum\limits_{s = t + r}^T \gamma^{s - 1}(\overline{p}_t - \underline{p}_t) \leq \sum\limits_{s = t + r}^T \gamma^{s - 1} diam(S_t) \leq \frac{\gamma^{t + r - 1}}{1 - \gamma} diam(S_t).$
+\end{enumerate}
+Получим следующее неравенство:
+$\hat{\theta}^T u_t - p_t \leq \frac{\gamma^r}{1 - \gamma} diam(S_t).$
+\end{proof}
+
+\lemma
+Пусть в момент $t$ покупатель приобретает предложенный товар, тогда выполнено следующее неравнство:
+$$\hat{\theta}^T u_t \geq p_t - \frac{\gamma}{1 - \gamma} diam(S^{+}_t).$$
+\begin{proof}
+Пусть $S(\sigma_t)$ - прибыль покупателя при стратегии $\sigma,$а стратегия $\sigma^{opt}_t$ - оптимальная стратегия покупателя (т.е. на раунде $t$ следует соглашение на покупку).
+Тогда выполнено следующее неравенство: $0 \leq S(\sigma^{opt}_t).$
+Подставим в это неравенство оценку для оптимальной прибыли:
+\begin{multline*}
+    S(\sigma^{opt}_t) \leq \gamma^{t - 1}(\hat{\theta}^T u_t - p_t) + \sum\limits_{s = t + 1}^T \gamma^{s - 1}(\hat{\theta}^T u_t - \underline{p}_t) \leq \\ \leq \gamma^{t - 1}(\hat{\theta}^T u_t - p_t) + \sum\limits_{s = t + 1}^T \gamma^{s - 1}(\hat{\theta}^T u_t - \underline{p}(S^{+}_t)_t)) \leq \sum\limits_{s = t}^T \gamma^{s - 1} diam(S^{+}_t) \leq \frac{\gamma^{t}}{1 - \gamma} diam(S^{+}_t).
+\end{multline*}
+Получим следующее неравенство:
+$\hat{\theta}^T u_t \geq p_t - \frac{\gamma}{1 - \gamma} diam(S^{+}_t).$
+\end{proof}
+
+\section{Алгоритм}
+\begin{algorithm}[H]
+\caption{Алгоритм для 2-мерного случая}
+\SetAlgoLined
+$\omega = (\overline{p}_t - \underline{p}_t)$\;
+$h_{max} = $ максимальная длина сегмента $S_t \cap \{x: (u_t, x) = p\}$\;
+\If{$\omega < 1 / T$}{
+    $p_t = \underline{p}_t$\;
+}\ElseIf{$bkt(A^{'}_t) = bkt(P_t) = k$}{
+    выбираем цену $p_t: Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{q - \gamma}diam(S_t))) = l^2_{k + 1} / (4 \pi)$\:
+}\ElseIf{$bkt(A^{'}_t) = r > bkt(P_t) = k, \omega < h_{max}$}{
+    выбираем $p_t: Area(S^{-}_t(p = p_t + \eta_t + \frac{\gamma^r}{q - \gamma}diam(S_t))) = l^2_{k + 1} / (4 \pi)$\;
+}\ElseIf{$bkt(A^{'}_t) = r > bkt(P_t) = k, \omega \geq h_{max}$}{
+    выбираем $p_t: Perim(S_t) - Perim(S^{+}_t(p = p_t = \eta_t + \frac{\gamma^r}{q - \gamma}diam(S_t)) = l_{k + 1} / 2$\;
+}
+\end{algorithm}
+\end{document}
